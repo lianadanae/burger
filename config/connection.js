@@ -1,22 +1,30 @@
-// Set up MySQL connection.
-const mysql = require('promise-mysql');
+// Require dependencies
+const mysql = require('mysql');
 
+// Set up MySQL connection
+let connection;
 
-// Export connection for the ORM to use.
-module.exports = {
-  create: async function() {
-    try {
-      this.connection = await mysql.createConnection(require('./db-config'));
-      console.log('DATABASE CONNECTION ESTABLISHED');
-      console.table(this.connection.config);
-    } catch (error) {
-      console.log('ERROR: DB CONNECTION FAILED');
-      console.table(error);
-      process.exit(1);
-    }
-  },
-  get: function() {
-    return this.connection;
-  },
-  connection: null,
+if (process.env.JAWSDB_URL) {
+  // JawsDB on Heroku
+connection = mysql.createConnection(process.env.JAWSDB_URL);
+} else {
+  connection = mysql.createConnection({
+    port: 3306,
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'burgers_db'
+  })
 };
+
+// Make connection to MySQL
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }
+  console.log('connected as id ' + connection.threadId);
+});
+
+// Export connection for the ORM to use
+module.exports = connection;
