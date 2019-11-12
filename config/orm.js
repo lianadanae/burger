@@ -1,5 +1,7 @@
-// Helper function for generating SQL syntax.
+// Import the MySQL connection
+const connection = require('../config/connection.js');
 
+// Helper function for generating SQL syntax.
 function printQuestionMarks(num) {
     const arr = [];
   
