@@ -1,0 +1,50 @@
+<h1>Burgers to eat!</h1>
+
+<div class="burger">
+  <h3>Burgers to be devoured!</h3>
+
+  <ul>
+    {{#each burgers}}
+    {{#unless devoured}}
+    {{burger_name}}
+    {{/unless}}
+    {{/each}}
+  </ul>
+  <button onclick="onSubmit()" type="button">Devour it!</button>
+</div>
+<div id="burgers-devoured">
+  <h2>Devoured Burgers</h2>
+
+  {{#each burgers}}
+  {{#if devoured}}
+  <div class="burger">{{burger_name}} <span>#{{id}}</span></div>
+  {{/if}}
+  {{/each}}
+</div>
+
+<h2>Add a burger you want to eat! Click the "Submit" button</h2>
+<form class="create-form">
+
+  <div class="form-group">
+    <label for="ca">Burger name:</label>
+    <input type="text" id="burger" name="name">
+  </div>
+
+  <button onclick="onSubmit()" type="button">Submit</button>
+</form>
+
+<script>
+  async function onSubmit() {
+    const burger_name = document.getElementById("burger").value
+    await fetch('/api/burgers', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        burger_name
+      })
+    })
+    window.location.reload()
+  }
+</script>
